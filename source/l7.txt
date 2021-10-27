@@ -1,0 +1,3 @@
+merge [select id from contact where id='0032X00002Hjg2RQAR' ][0] [select id from contact  where id='0032X000028YWsVQAW' ][0] ;
+merge [select id from contact where id='003w000001qkMH0AAM' ][0] [select id from contact  where id='003w000001y8nLGAAY' ][0] ;
+merge [select id from contact where id='003w000001qkMH0AAM' ][0] [select id from contact  where id='003w000001xj4SVAAY' ][0] ;

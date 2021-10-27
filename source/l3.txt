@@ -1,0 +1,2 @@
+m.mergeMe('Sap_account_number__c','0006260247','0006260999', true /*keepAddressAsWhole*/, 'mszymcz1@example.com');
+m.mergeMe('Sap_account_number__c','0006260248','0006260998', true /*keepAddressAsWhole*/, 'mszymcz1@example.com');

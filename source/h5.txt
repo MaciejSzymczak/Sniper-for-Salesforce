@@ -1,0 +1,16 @@
+Class convertLeadClass {
+  void convertLead(String leadId, String AccountId, String ContactId){
+    String currentStatus = [select status from Lead where id=:leadId][0].Status;
+    String convertStatus = [SELECT Id, MasterLabel FROM LeadStatus WHERE IsConverted=true LIMIT 1][0].MasterLabel;
+    If (currentStatus == convertStatus) {return;}
+    Database.LeadConvert lc = new Database.LeadConvert();
+    lc.setLeadId(leadId);
+    if (!String.IsBlank(AccountId)) lc.setAccountId(AccountId);
+    if (!String.IsBlank(ContactId)) lc.setContactId(ContactId); 
+    lc.setDoNotCreateOpportunity(true);
+    lc.setConvertedStatus(convertStatus);
+    Database.LeadConvertResult lcr = Database.convertLead(lc);
+    System.assert(lcr.isSuccess()); 
+  }
+}
+convertLeadClass m = new convertLeadClass();

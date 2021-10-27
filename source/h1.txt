@@ -1,0 +1,9 @@
+Class merger {
+    void mergeMe(Id deleteId, Id leaveId){
+	    //do something
+		System.debug('deleteId='+deleteId+' leaveId='+leaveId);
+		//Decimal x = 1/0;
+    }
+}
+merger m = new merger();
+m.mergeMe(':parameter1',':parameter2');

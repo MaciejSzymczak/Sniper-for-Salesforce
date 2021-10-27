@@ -1,0 +1,152 @@
+/*
+ * This code merges two contacts using the logic "Leave = nvl(Leave,toDelete)", I mean the logic:
+ * +---------+---------+---------+-------------------------+
+ * |Field    |Master   |Merge    |Result                   | 
+ * +---------+---------+---------+-------------------------+
+ * |PArentId           |BBB      |BBB                    |
+ * |Name     |ABC      |DEF      |ABC                      |
+ * |Phone    |a@x.com  |b@x.com  |a@x.com                  | 
+ * |Phone    |         |1234567  |1234567                  | The value was taken from Merge record as the value on master was blank
+ * |isActive |false    |true     |true                     | Sets the checkbox if checkbox is selected on either record
+ * |street   |London   |         |London                   |
+ * |city     |         |Street12 |Street12 or blank        | It may be risky to splice different parts of address
+ * |         |         |         |                         | if parameter keepAddressAsEntity=false => the result is "Street12" else the result is blank
+ * +---------+---------+---------+-------------------------+ 
+ * if parameter adminEmail is provided email is sent otherwise exception is raised
+ * 
+ * Before you use this code make sure:
+ *   1. You did the data backup
+ *   2. You profile has access to see encrypted data (in order not to lose fields ENCRYPTEDSTRING)
+ *
+ * @author Maciej Szymczak
+ * @version 2019.07.08
+ */
+Class merger {
+    // Returns a dynamic SOQL statement for the whole object, includes only creatable fields since we will be inserting a cloned result of this query
+    Map<String, Schema.SObjectField> fMap;
+	public string getCreatableFieldsSOQL(String objectName){
+        String selects = '';
+        // Get a map of field name and field token
+        fMap = Schema.getGlobalDescribe().get(objectName).getDescribe().Fields.getMap();
+        list<string> selectFields = new list<string>();
+         
+        if (fMap != null){
+            for (Schema.SObjectField ft : fMap.values()){ // loop through all field tokens (ft)
+                Schema.DescribeFieldResult fd = ft.getDescribe(); // describe each field (fd)
+                if (fd.isCreateable()){ // field is creatable
+                    if (!'CreatedDate,CreatedById,LastModifiedDate,LastModifiedById'.contains(fd.getName()) && (!fd.getName().contains('__pc'))) {
+                        selectFields.add(fd.getName());
+                    }
+                }
+            }
+        }
+        if (!selectFields.isEmpty()){
+            for (string s:selectFields){
+                selects += s + ',';
+            }
+            if (selects.endsWith(',')){selects = selects.substring(0,selects.lastIndexOf(','));}
+        }
+        return 'SELECT ' + selects + ' FROM ' + objectName;
+    }
+    void mergeMe(String fieldName, String masterId, String duplicateId, Boolean keepAddressAsEntity, String adminEmail){
+	try {
+		String soqlStmt = getCreatableFieldsSOQL('Contact');
+		Contact masterContact = Database.query(soqlStmt+' where '+fieldName+' =\''+masterId+'\'');
+		Contact duplicateContact = Database.query(soqlStmt+' where '+fieldName+' =\''+duplicateId+'\'');
+		for (Schema.SObjectField ft : fMap.values()){
+			Schema.DescribeFieldResult fd = ft.getDescribe();
+			if  (fd.isCreateable() && ((!fd.isCalculated()) && (!('ADDRESS,LOCATION,ID'.contains(''+fd.getType()))))) {
+				String fName = fd.getName();
+				if ('CreatedDate,CreatedById,LastModifiedDate,LastModifiedById'.contains(fName)) {
+					//do nothing with who fields
+				} else if ('place_holder1,place_holder2'.contains(fName)) {
+					// *** if you need to treat some fields in special way place your custom code here ***
+				} else if ('CURRENCY,EMAIL,ENCRYPTEDSTRING,MULTIPICKLIST,PHONE,PICKLIST,STRING,TEXTAREA,URL'.contains(''+fd.getType())) {
+					if ( String.isBlank((String)masterContact.get(fName)) ) masterContact.put(fName, duplicateContact.get(fName));
+				// *** update an address as an entity ***
+				} else if (keepAddressAsEntity && ('MailingStreet,MailingCity,MailingState,MailingPostalCode,MailingCountry,MailingLatitude,MailingLongitude,MailingGeocodeAccuracy'.contains(fName))) {
+					if (fName == 'MailingStreet') {
+						if ( 
+								String.isBlank( (String)masterContact.get('MailingStreet') ) &&  
+								String.isBlank( (String)masterContact.get('MailingCity') ) &&  
+								String.isBlank( (String)masterContact.get('MailingState') ) &&  
+								String.isBlank( (String)masterContact.get('MailingPostalCode') ) &&  
+								String.isBlank( (String)masterContact.get('MailingCountry') ) &&  
+								String.isBlank( (String)masterContact.get('MailingLatitude') ) &&  
+								String.isBlank( (String)masterContact.get('MailingLongitude') ) &&  
+								String.isBlank( (String)masterContact.get('MailingGeocodeAccuracy') )
+						   ) {
+							masterContact.put('MailingStreet', duplicateContact.get('MailingStreet'));
+							masterContact.put('MailingCity', duplicateContact.get('MailingCity'));
+							masterContact.put('MailingState', duplicateContact.get('MailingState'));
+							masterContact.put('MailingPostalCode', duplicateContact.get('MailingPostalCode'));
+							masterContact.put('MailingCountry', duplicateContact.get('MailingCountry'));
+							masterContact.put('MailingLatitude', duplicateContact.get('MailingLatitude'));
+							masterContact.put('MailingLongitude', duplicateContact.get('MailingLongitude'));
+							masterContact.put('MailingGeocodeAccuracy', duplicateContact.get('MailingGeocodeAccuracy'));
+						}
+					}
+				} else if (keepAddressAsEntity && ('OtherStreet,OtherCity,OtherState,OtherPostalCode,OtherCountry,OtherLatitude,OtherLongitude,OtherGeocodeAccuracy'.contains(fName))) {
+					if (fName == 'OtherStreet') {
+						if ( 
+								String.isBlank( (String)masterContact.get('OtherStreet') ) &&  
+								String.isBlank( (String)masterContact.get('OtherCity') ) &&  
+								String.isBlank( (String)masterContact.get('OtherState') ) &&  
+								String.isBlank( (String)masterContact.get('OtherPostalCode') ) &&  
+								String.isBlank( (String)masterContact.get('OtherCountry') ) &&  
+								String.isBlank( (String)masterContact.get('OtherLatitude') ) &&  
+								String.isBlank( (String)masterContact.get('OtherLongitude') ) &&  
+								String.isBlank( (String)masterContact.get('OtherGeocodeAccuracy') )
+						   ) {
+							masterContact.put('OtherStreet', duplicateContact.get('OtherStreet'));
+							masterContact.put('OtherCity', duplicateContact.get('OtherCity'));
+							masterContact.put('OtherState', duplicateContact.get('OtherState'));
+							masterContact.put('OtherPostalCode', duplicateContact.get('OtherPostalCode'));
+							masterContact.put('OtherCountry', duplicateContact.get('OtherCountry'));
+							masterContact.put('OtherLatitude', duplicateContact.get('OtherLatitude'));
+							masterContact.put('OtherLongitude', duplicateContact.get('OtherLongitude'));
+							masterContact.put('OtherGeocodeAccuracy', duplicateContact.get('OtherGeocodeAccuracy'));
+						}
+					} 
+				} else if ('BOOLEAN'.contains(''+fd.getType())) {
+					//set the checkbox if checkbox is selected on either record
+					masterContact.put(fName, ( (Boolean)masterContact.get(fName) || (Boolean)duplicateContact.get(fName)));
+				} else {
+					//'DATE,DATETIME,DOUBLE,INTEGER,REFERENCE,PERCENT'
+					masterContact.put(fName, (masterContact.get(fName)==null?duplicateContact.get(fName):masterContact.get(fName)));
+				}
+			}
+		}
+		//here you can place your non standard logic regarding to child records, for example
+		//  Account_Address__c[] doomedAccts = [SELECT Id FROM Account_Address__c WHERE Account__c = :duplicateId];
+        //  delete doomedAccts;
+		//  masterContact.Name = duplicateContact.Name + '-' + masterContact.Name;
+		//  masterContact.ParentId=null;
+		//  update masterContact;
+		merge masterContact duplicateContact;
+	}         
+	catch (Exception e)
+	{        
+		if (String.isBlank(adminEmail)) Throw e;
+		String[] stringlist = new List<String>{
+			   e.getMessage()+''
+			  ,e.getCause() +''
+			  ,e.getLineNumber()+''
+			  ,e.getStackTraceString()+''
+			   };
+		 Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage() ;
+		 String[] toAddresses = new String[] {adminEmail};
+		 mail.setToAddresses(toAddresses) ;
+		 mail.setSubject('FATAL ERROR: Merging contacts');
+		 String body = '<html><body>'+
+						  'masterId='+masterId+'</br>'+
+						  'duplicateId='+duplicateId+'</br>'+
+						  'Exception:</br>'+
+						  string.format('CODE= "{0}" MESSAGE="{1}" CAUSE={2} LINENUMBER={3} STACK={4}', stringlist)+
+						  '</body></html>';
+		 mail.setHtmlBody(body);
+		 Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+	}
+    }
+}
+merger m = new merger();

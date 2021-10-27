@@ -1,0 +1,2 @@
+m.mergeMe('Id','00323408230482394','00320498320498', true, 'maciej.szymczak@example.com');
+m.mergeMe('Id','00323408230482395','00320498320499', true, 'maciej.szymczak@example.com');

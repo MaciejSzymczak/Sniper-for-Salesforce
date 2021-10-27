@@ -1,0 +1,8 @@
+public class applicationException extends Exception {}
+Class merger {
+    void mergeMe(Id deleteId, Id leaveId){
+		System.debug('deleteId='+deleteId+' leaveId='+leaveId);
+		throw new applicationException('*** The process has completed successfully');
+    }
+}
+merger m = new merger();

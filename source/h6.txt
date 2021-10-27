@@ -1,0 +1,236 @@
+public class applicationException extends Exception {}
+// 2019.08.10 Rollback all changes in case of error
+// 2019.08.12 Changes: Do not update Attachment before deletion. Add creation date to file title.
+// 2019.08.15 Alert on finish.
+map<String,String> contentType2FileExt = new map<String,String> {
+'application/octet-stream'=>'.xlsx'
+,'image/bmp'=>'.bmp'
+,'application/ms-tnef'=>'.dat'
+,'application/vnd.ms-excel.sheet.macroEnabled.12'=>'.xlsm'
+,'application/x-ms-wmz'=>'.wmz'
+,'application/vnd.ms-word.document.macroEnabled.12'=>'.docm'
+,'message/global'=>'.dat'
+,'application/x-microsoft-rpmsg-message'=>'.pmsg'
+,'text/rtf'=>'.rtf'
+,'image/tiff'=>'.tiff'
+,'application/vnd.ms-xpsdocument'=>'.xps'
+,'application/vnd.ms-publisher'=>'.pub'
+,'application/vnd.ms-powerpoint.presentation.macroEnabled.12'=>'.pptm'
+,'application/png'=>'.png'
+,'video/mp4'=>'.mp4'
+,'image/vnd.adobe.photoshop'=>'.psd'
+,'application/excel'=>'.xlsx'
+,'image/x-png'=>'.PNG'
+,'APPLICATION/MSWORD'=>'.doc'
+,'text/csv'=>'.csv'
+,'application/pkcs7-signature'=>'.p7s'
+,'image/pjpeg'=>'.JPG'
+,'IMAGE/png'=>'.png'
+,'application/x-excel'=>'.xls'
+,'application/rtf'=>'.doc'
+,'application/x-msexcel'=>'.xls'
+,'application/vnd.ms-powerpoint.presentation.macroenabled.12'=>'.pptm'
+,'application/gif'=>'.gif'
+,'text/xml'=>'.xml'
+,'application/vnd.ms-powerpoint'=>'.ppt'
+,'APPLICATION/VND.OPENXMLFORMATS-OFFICEDOCUMENT.WORDPROCESSINGML.DOCUMENT'=>'.docx'
+,'binary/octet-stream'=>'.pdf'
+,'text/x-vcard'=>'.vcf'
+,'message/delivery-status'=>'.txt'
+,'application/x-compressed'=>'.zip'
+,'application/x-zip'=>'.zip'
+,'application/vnd.openxmlformats-officedocument.spreadsheetml.template'=>'.xltx'
+,'application/vnd.ms-word.document.macroenabled.12'=>'.docm'
+,'application/pdf'=>'.pdf'
+,'application/jpg'=>'.jpg'
+,'application/ms-excel'=>'.xls'
+,'application/MSEXCEL'=>'.xls'
+,'application/vnd.ms-excel.template.macroEnabled.12'=>'.xltm'
+,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'=>'.xlsx'
+,'application/ics'=>'.ics'
+,'application/VND.OPENXMLFORMATS-OFFICEDOCUMENT.SPREADSHEETML.SHEET'=>'.xlsx'
+,'audio/wav'=>'.wav'
+,'image/JPG'=>'.jpg'
+,'image/gif'=>'.gif'
+,'application/java-archive'=>'.jar'
+,'video/quicktime'=>'.MOV'
+,'application/x-iso9660-image'=>'.iso'
+,'image/jpeg'=>'.jpg'
+,'text/plain'=>'.txt'
+,'text/html'=>'.html'
+,'image/png'=>'.png'
+,'application/zip'=>'.zip'
+,'text/calendar'=>'.ics'
+,'application/force-download'=>'.pdf'
+,'application/msword'=>'.doc'
+,'image/jpg'=>'.jpg'
+,'IMAGE/jpg'=>'.jpg'
+,'application/vnd.ms-excel.sheet.macroenabled.12'=>'.xlsm'
+,'text/x-pdf'=>'.pdf'
+,'application/unknown'=>'.txt'
+,'application/vnd.ms-'=>'.xlsx'
+,'application/x-zip-compressed'=>'.zip'
+,'application/xml'=>'.doc'
+,'IMAGE/GIF'=>'.gif'
+,'application/vnd.oasis.opendocument.text'=>'.odt'
+,'application/x-rtf'=>'.rtf'
+,'application/pgp-keys'=>'.asc'
+,'text/directory'=>'.vcf'
+,'APPLICATION/VND.OPENXMLFORMATS-OFFICEDOCUMENT.SPREADSHEETML.SHEET'=>'.xlsx'
+,'application/postscript'=>'.eps'
+,'application/pgp-signature'=>'.asc'
+,'application/x-msword'=>'.DOC'
+,'text/vcard'=>'.vcf'
+,'application/VND.OPENXMLFORMATS-OFFICEDOCUMENT.WORDPROCESSINGML.DOCUMENT'=>'.docx'
+,'application/eml'=>'.eml'
+,'application/vnd.openxmlformats-officedocument.wordprocessingml.document'=>'.docx'
+,'audio/mpeg'=>'.mp3'
+,'application/octet'=>'.pdf'
+,'IMAGE/JPEG'=>'.jpg'
+,'APPLICATION/PDF'=>'.pdf'
+,'application/vnd.ms-excel'=>'.csv'
+,'audio/mp3'=>'.mp3'
+,'IMAGE/PNG'=>'.png'
+,'application/vnd.ms-word'=>'.doc'
+,'application/jar'=>'.jar'
+,'video/x-ms-wmv'=>'.wmv'
+,'application/x-iwork-pages-sffpages'=>'.pages'
+,'application/vnd.ms-excel.sheet.binary.macroenabled.12'=>'.xlsb'
+,'IMAGE/BMP'=>'.BMP'
+,'text/json'=>'json'
+,'application/vnd.oasis.opendocument.spreadsheet'=>'.ods'
+,'application/vnd.openxmlformats-officedocument.presentationml.presentation'=>'.pptx'
+,'application/download'=>'.pdf'
+,'application/oleobject'=>'.ods'
+,'image/x-citrix-jpeg'=>'.jpg'
+,'image/BMP'=>'.bmp'
+,'image/svg+xml'=>'.svg'
+,'multipart/related'=>'.mht'
+};
+List<Attachment> attachments = new List<Attachment> ();
+
+//Salesforce enforces an Apex Heap Size Limit of 6MB for synchronous transactions and 12MB for asynchronous transactions.
+Integer limitValue = 50;
+Integer BodyLength = 12000000/limitValue;
+if (limitValue==1) BodyLength = 90000000;
+
+System.Savepoint sp;
+//Occasionally limit 1 is required to overcome the error "System.LimitException: Query of LOB fields caused heap usage to exceed limit". 
+//This error does not raise apex error and thus is not catchable.
+//try {
+	sp = Database.setSavepoint();
+	attachments =[
+	select Id
+		,ParentId
+		,Name 
+		,Body
+		,IsPrivate
+		,ContentType
+		,OwnerId	
+		,CreatedDate	
+		,CreatedById	
+		,LastModifiedDate	
+		,LastModifiedById	
+		,Description	
+		,IsPartnerShared
+		,createdby.name
+	from Attachment
+	where (not Name like 'MIGRATED%')
+    and Parent.type ='Account'
+	and BodyLength < :BodyLength
+	and BodyLength != 0
+	order by BodyLength desc
+	limit :limitValue]; //
+	//and Id in ('00P23000001BlvO','00P23000001BlvT')
+	//and parentId='a0r0W00000EzMQU'
+	List<ContentVersion> contentVersionToadd = new List<ContentVersion>();
+	List<Task> tasks = new List<Task>();
+	
+	if (attachments.size()==0) {
+	  throw new applicationException('*** The process has completed successfully - no records to process ***');
+	}
+	
+	for (Attachment attachment : attachments) {
+		system.debug('attachment.Id:'+attachment.Id);
+		String ppathOnClient = attachment.Name;
+		if (contentType2FileExt.containsKey(attachment.ContentType)) {
+			String fileExtension = contentType2FileExt.get(attachment.ContentType);
+			if (!(attachment.Name+'').Right( fileExtension.Length()  ).equalsIgnoreCase( fileExtension )) {
+				ppathOnClient = attachment.Name + fileExtension;
+			}
+		}
+		String createdDateTxt = attachment.CreatedDate.format('MM/dd/yyyy');
+		ContentVersion contentversion = new ContentVersion (
+			VersionData      = attachment.Body
+			,PathOnClient     = ppathOnClient
+			//ContentUrl - When you upload a link using the Data Loader, specify the URL in ContentUrl. 
+			// Don’t use PathOnClient or VersionData to upload links.
+			,Title            = createdDateTxt+': '+attachment.Name 
+			,IsMajorVersion   = true
+			,CreatedDate      = attachment.CreatedDate
+			,LastModifiedDate = (attachment.LastModifiedById=='0050W0000071ds8QAA'?attachment.CreatedDate:attachment.LastModifiedDate)
+			,CreatedById      = attachment.CreatedById
+			,LastModifiedById = (attachment.LastModifiedById=='0050W0000071ds8QAA'?attachment.OwnerId:attachment.LastModifiedById)
+			,OwnerId          = attachment.CreatedById
+			//I am not able to set attachment.OwnerId due to an error:
+			// when FirstPublishLocationId = attachment.CreatedById  => You must specify a FirstPublishLocation where you have publish permission.: [FirstPublishLocationId]" 
+			// when FirstPublishLocationId = attachment.OwnerId or is blank => Documents in a user's private library must always be owned by that user.: [OwnerId]
+			,Description      = attachment.Description
+			,Attachment_Id__c = attachment.Id //Attachment_Id__c is string(18) Case sensitive, unique Id
+			,Owner_Id__c      = attachment.OwnerId
+			//,FirstPublishLocationId = Library Id 
+		);
+		//We create new record here
+		//If you’re updating content that you’ve already uploaded Perform the Insert function and provide ContentDocumentId
+		contentVersionToadd.add(contentversion);
+	}
+	insert contentVersionToadd;
+	Map<Id,ContentVersion> mapContentVersion 
+		= new Map<Id,ContentVersion>([select Id, ContentDocumentId from ContentVersion where Id in :contentVersionToadd]);
+	Integer i = 0;
+	List<ContentDocumentLink> contentDocumentLinkToadd = new List<ContentDocumentLink>();
+	for (Attachment attachment : attachments) {
+		//https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_objects_contentdocumentlink.htm
+		Id docId = mapContentVersion.get( contentVersionToadd[i].Id ).ContentDocumentId;
+		contentDocumentLinkToadd.add (
+			new ContentDocumentLink(
+				LinkedEntityId      = attachment.ParentId 
+				,ContentDocumentId   = docId
+				,ShareType           = 'I' //V=Viewer  C=Collaborator 	I=Inherit
+				,Visibility          = 'AllUsers'
+			)
+		);
+		attachment.Name = 'MIGRATED '+contentVersionToadd[i].Id+' '+attachment.Name;
+		tasks.add (  new task(status='Completed', subject='MIGRATED:'+attachment.Id+':'+contentVersionToadd[i].Id)  );
+		i++;
+	}
+	insert contentDocumentLinkToadd;
+	//update attachments;	
+	insert tasks; 
+	delete attachments; 
+  if (Test.isRunningTest()) Decimal x=1/0;	
+ /*
+}
+catch (Exception e)
+{        
+	Database.rollback(sp);
+    String[] stringlist = new List<String>{
+          e.getMessage()+''
+          ,e.getCause() +'' //note: this is parent exception, to test: what will this return e.getCause().getMessage()?
+          ,e.getLineNumber()+''
+          ,e.getStackTraceString()+''
+           };   
+	 Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage() ;
+	 String[] toAddresses = new String[] {'maciej.szymczak@cision.com' };
+	 mail.setToAddresses(toAddresses) ;
+		 String body = '<html><body>'+
+						  'RecordId='+attachments+'</br>'+
+						  string.format('MESSAGE="{0}" CAUSE={1} LINENUMBER={2} STACK={3}', stringlist)+
+						  '</body></html>';
+	 mail.setSubject('AttToFile ERROR');
+	 mail.setHtmlBody(body);
+	 if (!Test.isRunningTest()) {
+		Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+	 }
+}
+*/

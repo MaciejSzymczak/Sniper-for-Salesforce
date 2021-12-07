@@ -2,12 +2,12 @@ program SalesforceSniper;
 
 uses
   Forms,
-  UMain in 'UMain.pas' {Form1};
+  UMain in 'UMain.pas' {FSniper};
 
 {$R *.res}
 
 begin
   Application.Initialize;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TFSniper, FSniper);
   Application.Run;
 end.

@@ -8,7 +8,7 @@ uses
   ToolEdit, FileCtrl, Math, ComCtrls;
 
 type
-  TForm1 = class(TForm)
+  TFSniper = class(TForm)
     OpenDialog: TOpenDialog;
     Splitter2: TSplitter;
     Popup: TPopupMenu;
@@ -71,6 +71,8 @@ type
     Label10: TLabel;
     Panel9: TPanel;
     PasswordNotProvided: TLabel;
+    SecurityToken: TEdit;
+    Label11: TLabel;
     procedure LinesLoadFromFileClick(Sender: TObject);
     procedure HeaderLoadFromFileClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -106,6 +108,7 @@ type
     procedure PasswordChange(Sender: TObject);
   private
     appDir : string;
+    timestampDir : string;
     procedure generateRun (dir : string; fname : tFileName; recordFrom : integer; recordTo : integer; numberOfLines : integer; processName : string);
   public
     defaultWorkingPath : string;
@@ -113,7 +116,7 @@ type
   end;
 
 var
-  Form1: TForm1;
+  FSniper: TFSniper;
 
 implementation
 
@@ -224,7 +227,7 @@ begin
 end;
 
 
-procedure TForm1.FormShow(Sender: TObject);
+procedure TFSniper.FormShow(Sender: TObject);
 begin
  appDir := extractFilePath (Application.ExeName);
 
@@ -233,7 +236,7 @@ begin
 
  url.Text := getSystemParam('url',url.Text);
  User.Text := getSystemParam('User',User.Text);
- Password.Text := getSystemParam('Password',Password.Text);
+ //Password.Text := getSystemParam('Password',Password.Text);
  processes.Text := getSystemParam('processes',processes.Text);
  workingDir.Text := getSystemParam('workingDir',defaultWorkingPath);
  if fileExists(defaultWorkingPath+'\tmpHeader.txt') then header.Lines.LoadFromFile(defaultWorkingPath+'\tmpHeader.txt');
@@ -256,10 +259,13 @@ begin
 end;
 
 
-procedure TForm1.generateRun (dir : string; fname : tFileName; recordFrom : integer; recordTo : integer; numberOfLines : integer; processName : string);
+procedure TFSniper.generateRun (dir : string; fname : tFileName; recordFrom : integer; recordTo : integer; numberOfLines : integer; processName : string);
 var f : textfile;
     n : integer;
 begin
+  Header.Lines.SaveToFile(dir+'\Header.txt');
+  Lines.Lines.SaveToFile(dir+'\Lines.txt');
+
   //RUN.BAT
   AssignFile(f,dir+fname);
   reWrite(f);
@@ -275,6 +281,7 @@ begin
         RunBtn.refresh;
       end;
     end;
+    WriteLn(f,'del config.bat');
     WriteLn(f,'pause');
     closeFile(f);
   end else begin
@@ -286,7 +293,7 @@ begin
       WriteLn(f,'goto do_while_loop_start');
       closeFile(f);
 
-      AssignFile(f,workingDir.Text+'\script.txt');
+      AssignFile(f,dir+'\script.txt');
       reWrite(f);
       WriteLn(f,
         Header.Text
@@ -295,7 +302,25 @@ begin
   end;
 end;
 
-function TForm1.Generate : boolean;
+Function DateToYYYYMMDD_HHMMSSMI(Data : TDateTime) : ShortString;
+//DD-MM-YYYY HH24:MI:SS:MI
+  Var Year,Month,Day      : Word;
+      TS                  : TTimeStamp;
+      Hour, Min, Sec, MSec: Word;
+Begin
+ TS := DateTimeToTimeStamp(Data);
+ TS.Time := 0;
+ decodeDate(TimeStampToDateTime(TS) ,Year,Month,Day);
+
+ TS := DateTimeToTimeStamp(Data);
+ TS.Date := 0;
+ DecodeTime(Data ,Hour, Min, Sec, MSec);
+
+ Result := FormatFloat('0000',Year)+'-'+FormatFloat('00',Month)+'-'+FormatFloat('00',Day)+'_'+FormatFloat('00',Hour)+FormatFloat('00',Min)+FormatFloat('00',Sec); //+':'+FormatFloat('000',MSec);
+End;
+
+
+function TFSniper.Generate : boolean;
 var f : textfile;
     t : integer;
     c : integer;
@@ -320,25 +345,27 @@ var f : textfile;
     parameter10 : string;
 
 begin
-  cleanUp(workingDir.text, 'script*');
-  cleanUp(workingDir.text, 'run*');
-  cleanUp(workingDir.text, 'general*');
+  timestampDir := workingDir.text + '/' + DateToYYYYMMDD_HHMMSSMI(now);
+  FileCtrl.ForceDirectories( timestampDir );
+  cleanUp(timestampDir, 'script*');
+  cleanUp(timestampDir, 'run*');
+  cleanUp(timestampDir, 'general*');
 
   copyFile(
      PAnsiChar(appDir+'ExecuteAnonymous.jar')
-   , PAnsiChar(workingDir.text+'\ExecuteAnonymous.jar')
+   , PAnsiChar(timestampDir+'\ExecuteAnonymous.jar')
    ,false);
 
   RunBtn.Enabled := false;
   RunBtn.Refresh;
 
   //CONFIG.BAT
-  AssignFile(f, workingDir.Text+'\config.bat');
+  AssignFile(f, timestampDir+'\config.bat');
   reWrite(f);
   WriteLn(f,'set url='+url.text);
   WriteLn(f,'set uname='+User.text);
-  WriteLn(f,'set pass='+Password.Text);
-  WriteLn(f,'set apiv=45.0');
+  WriteLn(f,'set pass='+Password.Text + SecurityToken.text);
+  WriteLn(f,'set apiv=53.0');
   closeFile(f);
 
   c := Lines.Lines.Count-1;
@@ -353,12 +380,12 @@ begin
     if (recordTo > c+1) then recordTo := numberOfLines;
     if numberOfProcesses = 1 then processName := ''
       else processName := '_process_'+ intToStr(processNumber);
-    generateRun(workingDir.text, '\run'+processName+'.bat', recordFrom, recordTo, numberOfLines, processName);
+    generateRun(timestampDir, '\run'+processName+'.bat', recordFrom, recordTo, numberOfLines, processName);
   end;
 
   //script<x>.txt
   for t := 0 to c Do begin
-    AssignFile(f,workingDir.Text+'\script'+inttostr(t+1)+'.txt');
+    AssignFile(f,timestampDir+'\script'+inttostr(t+1)+'.txt');
     reWrite(f);
 
     headerText := Header.Text;
@@ -409,21 +436,21 @@ begin
 end;
 
 
-procedure TForm1.LinesLoadFromFileClick(Sender: TObject);
+procedure TFSniper.LinesLoadFromFileClick(Sender: TObject);
 begin
  OpenDialog.InitialDir := workingDir.Text;
  if OpenDialog.Execute then
    Lines.Lines.LoadFromFile(OpenDialog.FileName);
 end;
 
-procedure TForm1.HeaderLoadFromFileClick(Sender: TObject);
+procedure TFSniper.HeaderLoadFromFileClick(Sender: TObject);
 begin
  OpenDialog.InitialDir := workingDir.Text;
  if OpenDialog.Execute then
    Header.Lines.LoadFromFile(OpenDialog.FileName);
 end;
 
-procedure TForm1.BitBtn1Click(Sender: TObject);
+procedure TFSniper.BitBtn1Click(Sender: TObject);
 var point : tpoint;
     btn   : tcontrol;
 begin
@@ -434,44 +461,44 @@ begin
  Popup.Popup(Point.X,Point.Y);
 end;
 
-procedure TForm1.Basicexample1Click(Sender: TObject);
+procedure TFSniper.Basicexample1Click(Sender: TObject);
 begin
  header.Lines.LoadFromFile( appDir + 'h1.txt' );
  lines.Lines.LoadFromFile( appDir + 'l1.txt' );
 end;
 
-procedure TForm1.WritingErrorToGenerallog1Click(Sender: TObject);
+procedure TFSniper.WritingErrorToGenerallog1Click(Sender: TObject);
 begin
  header.Lines.LoadFromFile( appDir + 'h2.txt' );
  lines.Lines.LoadFromFile( appDir + 'l2.txt' );
 end;
 
-procedure TForm1.Mergeaccount1Click(Sender: TObject);
+procedure TFSniper.Mergeaccount1Click(Sender: TObject);
 begin
  header.Lines.LoadFromFile( appDir + 'h3.txt' );
  lines.Lines.LoadFromFile( appDir + 'l3.txt' );
 end;
 
-procedure TForm1.Mergecontacts1Click(Sender: TObject);
+procedure TFSniper.Mergecontacts1Click(Sender: TObject);
 begin
  header.Lines.LoadFromFile( appDir + 'h4.txt' );
  lines.Lines.LoadFromFile( appDir + 'l4.txt' );
 end;
 
-procedure TForm1.Example5ConvertLead1Click(Sender: TObject);
+procedure TFSniper.Example5ConvertLead1Click(Sender: TObject);
 begin
  header.Lines.LoadFromFile( appDir + 'h5.txt' );
  lines.Lines.LoadFromFile( appDir + 'l5.txt' );
 end;
 
-procedure TForm1.Example6ConvertAttachmentsintoFiles1Click(
+procedure TFSniper.Example6ConvertAttachmentsintoFiles1Click(
   Sender: TObject);
 begin
  header.Lines.LoadFromFile( appDir + 'h6.txt' );
  lines.Lines.LoadFromFile( appDir + 'l6.txt' );
 end;
 
-procedure TForm1.Example7Mergecontactsbasic1Click(Sender: TObject);
+procedure TFSniper.Example7Mergecontactsbasic1Click(Sender: TObject);
 begin
  header.Lines.LoadFromFile( appDir + 'h7.txt' );
  lines.Lines.LoadFromFile( appDir + 'l7.txt' );
@@ -507,7 +534,7 @@ end;
 
 
 
-procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TFSniper.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   setSystemParam('url',url.Text);
   setSystemParam('processes',processes.Text);
@@ -518,7 +545,7 @@ begin
   setSystemParam('workingDir',workingDir.Text);
 end;
 
-procedure TForm1.HeaderKeyUp(Sender: TObject; var Key: Word;
+procedure TFSniper.HeaderKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   If ssCtrl in Shift then
@@ -526,7 +553,7 @@ begin
      Header.SelectAll;
 end;
 
-procedure TForm1.LinesKeyUp(Sender: TObject; var Key: Word;
+procedure TFSniper.LinesKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   If ssCtrl in Shift then
@@ -535,19 +562,19 @@ begin
 end;
 
 
-procedure TForm1.processesChange(Sender: TObject);
+procedure TFSniper.processesChange(Sender: TObject);
 begin
  GenerateAndExecute.Enabled := processes.Text = '1';
 end;
 
-procedure TForm1.RunBtnClick(Sender: TObject);
+procedure TFSniper.RunBtnClick(Sender: TObject);
 begin
   if not Generate then exit;
   showmessage('DONE. Now you can run the script run.bat'+#13+#10+'Remember to keep working folder under key as it contains sensitive data, especially the password in the file config.bat');
-  ShowFolder(workingDir.Text);
+  ShowFolder(timestampDir);
 end;
 
-procedure TForm1.GenerateAndExecuteClick(Sender: TObject);
+procedure TFSniper.GenerateAndExecuteClick(Sender: TObject);
 var point : tpoint;
     btn   : tcontrol;
 begin
@@ -558,13 +585,13 @@ begin
  Gen.Popup(Point.X,Point.Y);
 end;
 
-procedure TForm1.MenuItem1Click(Sender: TObject);
+procedure TFSniper.MenuItem1Click(Sender: TObject);
 begin
  if not Generate then exit;
- ExecuteFile( workingDir.Text + '\Run.bat','','',SW_SHOWMAXIMIZED);
+ ExecuteFile( timestampDir + '\Run.bat','','',SW_SHOWMAXIMIZED);
 end;
 
-procedure TForm1.SpeedButton1Click(Sender: TObject);
+procedure TFSniper.SpeedButton1Click(Sender: TObject);
 var
   URL: string;
 begin
@@ -577,18 +604,18 @@ begin
   ShellExecute(0, 'open', PChar(URL), nil, nil, SW_SHOWNORMAL);
 end;
 
-procedure TForm1.SpeedButton2Click(Sender: TObject);
+procedure TFSniper.SpeedButton2Click(Sender: TObject);
 begin
   ShowFolder(workingDir.Text);
 end;
 
-procedure TForm1.Example8Lockopportunities1Click(Sender: TObject);
+procedure TFSniper.Example8Lockopportunities1Click(Sender: TObject);
 begin
  header.Lines.LoadFromFile( appDir + 'h8.txt' );
  lines.Lines.LoadFromFile( appDir + 'l8.txt' );
 end;
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TFSniper.Button1Click(Sender: TObject);
 
 var currentChartClasses :
       array of
@@ -607,27 +634,27 @@ begin
 
 end;
 
-procedure TForm1.SpeedButton3Click(Sender: TObject);
+procedure TFSniper.SpeedButton3Click(Sender: TObject);
 begin
 Pages.ActivePageIndex := 1;
 end;
 
-procedure TForm1.SpeedButton4Click(Sender: TObject);
+procedure TFSniper.SpeedButton4Click(Sender: TObject);
 begin
  Pages.ActivePageIndex := 2;
 end;
 
-procedure TForm1.SpeedButton5Click(Sender: TObject);
+procedure TFSniper.SpeedButton5Click(Sender: TObject);
 begin
  Pages.ActivePageIndex := 0;
 end;
 
-procedure TForm1.Back3Click(Sender: TObject);
+procedure TFSniper.Back3Click(Sender: TObject);
 begin
  Pages.ActivePageIndex := 1;
 end;
 
-procedure TForm1.TabSheet1Resize(Sender: TObject);
+procedure TFSniper.TabSheet1Resize(Sender: TObject);
 begin
  LogonPanel.Left :=  (BodyPanel1.Width -  LogonPanel.Width) div 2;
  LogonPanel.Top :=  (BodyPanel1.Height -  LogonPanel.Height) div 2;
@@ -640,22 +667,22 @@ begin
  ButtonsPanel3.Left :=  (TabSheet3.Width -  ButtonsPanel3.Width) div 2;
 end;
 
-procedure TForm1.TabSheet2Resize(Sender: TObject);
+procedure TFSniper.TabSheet2Resize(Sender: TObject);
 begin
  TabSheet1Resize(nil);
 end;
 
-procedure TForm1.TabSheet3Resize(Sender: TObject);
+procedure TFSniper.TabSheet3Resize(Sender: TObject);
 begin
  TabSheet1Resize(nil);
 end;
 
-procedure TForm1.FormPaint(Sender: TObject);
+procedure TFSniper.FormPaint(Sender: TObject);
 begin
  TabSheet1Resize(nil);
 end;
 
-procedure TForm1.PasswordChange(Sender: TObject);
+procedure TFSniper.PasswordChange(Sender: TObject);
 begin
  PasswordNotProvided.Visible := false;
 end;

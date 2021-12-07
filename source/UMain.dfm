@@ -1,11 +1,11 @@
-object Form1: TForm1
+object FSniper: TFSniper
   Left = 338
   Top = 207
   Width = 1253
   Height = 685
   Caption = 
     'SNIPER for Salesforce.                Apex Code Mass Execution, ' +
-    'version 2021.10.27'
+    'version 2021.12.07'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -99,60 +99,60 @@ object Form1: TForm1
         object LogonPanel: TPanel
           Left = 176
           Top = 56
-          Width = 641
-          Height = 233
+          Width = 721
+          Height = 281
           TabOrder = 0
           object Label3: TLabel
-            Left = 120
-            Top = 112
-            Width = 66
+            Left = 128
+            Top = 120
+            Width = 81
             Height = 13
             Caption = 'Salesforce Url'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
-            Font.Style = []
+            Font.Style = [fsBold]
             ParentFont = False
           end
           object Label6: TLabel
-            Left = 80
-            Top = 144
-            Width = 106
+            Left = 88
+            Top = 152
+            Width = 127
             Height = 13
             Caption = 'Salesforce User Name'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
-            Font.Style = []
+            Font.Style = [fsBold]
             ParentFont = False
           end
           object Label7: TLabel
-            Left = 64
+            Left = 152
             Top = 176
-            Width = 118
+            Width = 55
             Height = 13
-            Caption = 'Password+security token'
+            Caption = 'Password'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
-            Font.Style = []
+            Font.Style = [fsBold]
             ParentFont = False
           end
           object Label8: TLabel
-            Left = 16
-            Top = 208
-            Width = 623
+            Left = 40
+            Top = 256
+            Width = 633
             Height = 16
             Caption = 
               'Your password is NOT sent to any cloud. It is only stored in fil' +
               'e config.bat in the folder you specify in step 3.'
           end
           object Label9: TLabel
-            Left = 16
-            Top = 72
+            Left = 176
+            Top = 80
             Width = 277
             Height = 16
             Caption = 'Provide login access to your Salesforce'
@@ -163,9 +163,22 @@ object Form1: TForm1
             Font.Style = [fsBold]
             ParentFont = False
           end
+          object Label11: TLabel
+            Left = 128
+            Top = 208
+            Width = 83
+            Height = 13
+            Caption = 'Security token'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'MS Sans Serif'
+            Font.Style = [fsBold]
+            ParentFont = False
+          end
           object url: TEdit
-            Left = 192
-            Top = 104
+            Left = 216
+            Top = 112
             Width = 265
             Height = 25
             BevelKind = bkFlat
@@ -173,7 +186,7 @@ object Form1: TForm1
             BorderStyle = bsNone
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
-            Font.Height = -16
+            Font.Height = -13
             Font.Name = 'MS Sans Serif'
             Font.Style = []
             ParentFont = False
@@ -181,8 +194,8 @@ object Form1: TForm1
             Text = 'https://login.salesforce.com'
           end
           object User: TEdit
-            Left = 192
-            Top = 136
+            Left = 216
+            Top = 144
             Width = 265
             Height = 25
             BevelKind = bkFlat
@@ -190,7 +203,7 @@ object Form1: TForm1
             BorderStyle = bsNone
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
-            Font.Height = -16
+            Font.Height = -13
             Font.Name = 'MS Sans Serif'
             Font.Style = []
             ParentFont = False
@@ -198,8 +211,8 @@ object Form1: TForm1
             Text = 'yourusername@company.com'
           end
           object Password: TEdit
-            Left = 192
-            Top = 168
+            Left = 216
+            Top = 176
             Width = 265
             Height = 25
             BevelKind = bkFlat
@@ -207,7 +220,7 @@ object Form1: TForm1
             BorderStyle = bsNone
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
-            Font.Height = -16
+            Font.Height = -13
             Font.Name = 'MS Sans Serif'
             Font.Style = []
             ParentFont = False
@@ -219,12 +232,37 @@ object Form1: TForm1
           object Panel9: TPanel
             Left = 16
             Top = 16
-            Width = 609
+            Width = 697
             Height = 41
             Caption = 
               'Welcome! Using this tool you can merge records and run apex code' +
               ' for thousands of records.'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'MS Sans Serif'
+            Font.Style = [fsBold]
+            ParentFont = False
             TabOrder = 3
+          end
+          object SecurityToken: TEdit
+            Left = 216
+            Top = 208
+            Width = 265
+            Height = 25
+            BevelKind = bkFlat
+            BevelOuter = bvNone
+            BorderStyle = bsNone
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'MS Sans Serif'
+            Font.Style = []
+            ParentFont = False
+            PasswordChar = '*'
+            TabOrder = 4
+            Text = '<Password>'
+            OnChange = PasswordChange
           end
         end
       end

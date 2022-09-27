@@ -73,6 +73,8 @@ type
     PasswordNotProvided: TLabel;
     SecurityToken: TEdit;
     Label11: TLabel;
+    LinesHelp: TSpeedButton;
+    HeadersHelp: TSpeedButton;
     procedure LinesLoadFromFileClick(Sender: TObject);
     procedure HeaderLoadFromFileClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -106,6 +108,8 @@ type
     procedure TabSheet3Resize(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure PasswordChange(Sender: TObject);
+    procedure LinesHelpClick(Sender: TObject);
+    procedure HeadersHelpClick(Sender: TObject);
   private
     appDir : string;
     timestampDir : string;
@@ -282,6 +286,7 @@ begin
       end;
     end;
     WriteLn(f,'del config.bat');
+    WriteLn(f,'del script*.txt');
     WriteLn(f,'pause');
     closeFile(f);
   end else begin
@@ -567,12 +572,6 @@ begin
  GenerateAndExecute.Enabled := processes.Text = '1';
 end;
 
-procedure TFSniper.RunBtnClick(Sender: TObject);
-begin
-  if not Generate then exit;
-  showmessage('DONE. Now you can run the script run.bat'+#13+#10+'Remember to keep working folder under key as it contains sensitive data, especially the password in the file config.bat');
-  ShowFolder(timestampDir);
-end;
 
 procedure TFSniper.GenerateAndExecuteClick(Sender: TObject);
 var point : tpoint;
@@ -583,12 +582,6 @@ begin
  Point.y := btn.Height;
  Point   := btn.ClientToScreen(Point);
  Gen.Popup(Point.X,Point.Y);
-end;
-
-procedure TFSniper.MenuItem1Click(Sender: TObject);
-begin
- if not Generate then exit;
- ExecuteFile( timestampDir + '\Run.bat','','',SW_SHOWMAXIMIZED);
 end;
 
 procedure TFSniper.SpeedButton1Click(Sender: TObject);
@@ -685,6 +678,30 @@ end;
 procedure TFSniper.PasswordChange(Sender: TObject);
 begin
  PasswordNotProvided.Visible := false;
+end;
+
+procedure TFSniper.RunBtnClick(Sender: TObject);
+begin
+ if not Generate then exit;
+ ExecuteFile( timestampDir + '\Run.bat','','',SW_SHOWMAXIMIZED);
+end;
+
+procedure TFSniper.MenuItem1Click(Sender: TObject);
+begin
+  if not Generate then exit;
+  showmessage('DONE. Now you can run the script run.bat'+#13+#10+'Remember to keep working folder under key as it contains sensitive data, especially the password in the file config.bat');
+  ShowFolder(timestampDir);
+end;
+
+
+procedure TFSniper.LinesHelpClick(Sender: TObject);
+begin
+  showmessage('Leave the lines blank if you want the script to be executed in the infinite loop');
+end;
+
+procedure TFSniper.HeadersHelpClick(Sender: TObject);
+begin
+  showmessage('You can refer to lines using the syntax :parameter1, :parameter2 and so on');
 end;
 
 end.

@@ -815,7 +815,7 @@ object FSniper: TFSniper
         Left = 232
         Top = 32
         Width = 753
-        Height = 169
+        Height = 153
         Caption = 'Configuration'
         TabOrder = 1
         object Label5: TLabel
@@ -854,17 +854,15 @@ object FSniper: TFSniper
           OnClick = SpeedButton2Click
         end
         object Label10: TLabel
-          Left = 24
-          Top = 120
-          Width = 547
+          Left = 93
+          Top = 71
+          Width = 208
           Height = 16
-          Caption = 
-            'Folder with temporary files and general.log. Please mind is recr' +
-            'eated before execution starts.'
+          Caption = '- folder with temporary files and log.'
         end
         object PasswordNotProvided: TLabel
           Left = 24
-          Top = 144
+          Top = 120
           Width = 194
           Height = 16
           Caption = 'The password was not provided.'

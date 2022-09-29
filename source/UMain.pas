@@ -287,6 +287,8 @@ begin
     end;
     WriteLn(f,'del config.bat');
     WriteLn(f,'del script*.txt');
+    WriteLn(f,'del run.bat');
+    WriteLn(f,'del *.jar');
     WriteLn(f,'pause');
     closeFile(f);
   end else begin

@@ -1,0 +1,2 @@
+//since you need infinite loop just do not provide the lines :-)
+System.debug('Infinite loop');

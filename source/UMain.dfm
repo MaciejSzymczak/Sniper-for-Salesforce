@@ -949,6 +949,14 @@ object FSniper: TFSniper
       Caption = 'Example 8: Lock opportunities'
       OnClick = Example8Lockopportunities1Click
     end
+    object Example9OpportunitySplit1: TMenuItem
+      Caption = 'Example 9: OpportunitySplit'
+      OnClick = Example9OpportunitySplit1Click
+    end
+    object Example10Infiniteloop1: TMenuItem
+      Caption = 'Example 10: Infinite loop'
+      OnClick = Example10Infiniteloop1Click
+    end
   end
   object Gen: TPopupMenu
     Left = 328

@@ -75,6 +75,8 @@ type
     Label11: TLabel;
     LinesHelp: TSpeedButton;
     HeadersHelp: TSpeedButton;
+    Example9OpportunitySplit1: TMenuItem;
+    Example10Infiniteloop1: TMenuItem;
     procedure LinesLoadFromFileClick(Sender: TObject);
     procedure HeaderLoadFromFileClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -110,6 +112,8 @@ type
     procedure PasswordChange(Sender: TObject);
     procedure LinesHelpClick(Sender: TObject);
     procedure HeadersHelpClick(Sender: TObject);
+    procedure Example9OpportunitySplit1Click(Sender: TObject);
+    procedure Example10Infiniteloop1Click(Sender: TObject);
   private
     appDir : string;
     timestampDir : string;
@@ -704,6 +708,18 @@ end;
 procedure TFSniper.HeadersHelpClick(Sender: TObject);
 begin
   showmessage('You can refer to lines using the syntax :parameter1, :parameter2 and so on');
+end;
+
+procedure TFSniper.Example9OpportunitySplit1Click(Sender: TObject);
+begin
+ header.Lines.LoadFromFile( appDir + 'h9.txt' );
+ lines.Lines.LoadFromFile( appDir + 'l9.txt' );
+end;
+
+procedure TFSniper.Example10Infiniteloop1Click(Sender: TObject);
+begin
+ header.Lines.LoadFromFile( appDir + 'h10.txt' );
+ lines.Lines.LoadFromFile( appDir + 'l10.txt' );
 end;
 
 end.

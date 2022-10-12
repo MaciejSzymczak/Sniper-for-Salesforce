@@ -1,0 +1,23 @@
+Class createSplit {
+	void run(String pLegacyId, String Owner1Id, String Owner2Id){
+	    //This is working code but please mind the IDs are going to be different in your org
+		//select Id, MasterLabel from OpportunitySplitType
+		//1494J000000PT4jQAG Revenue
+		//1494J000000PT4oQAG Total Amount
+		//1494J000000c8FiQAI PT/MED Split
+		Id pOpp = [select Id from Opportunity where TK_Legacy_Id__c = :pLegacyId].Id;
+		OpportunitySplit[] osToInsert = new List<OpportunitySplit>();
+		osToInsert.add(new OpportunitySplit(OpportunityId =pOpp, SplitTypeId='1494J000000PT4jQAG', SplitOwnerId = Owner1Id, SplitPercentage=0));
+		osToInsert.add(new OpportunitySplit(OpportunityId =pOpp, SplitTypeId='1494J000000PT4oQAG', SplitOwnerId = Owner1Id, SplitPercentage=0));
+		osToInsert.add(new OpportunitySplit(OpportunityId =pOpp, SplitTypeId='1494J000000c8FiQAI', SplitOwnerId = Owner1Id, SplitPercentage=0));
+		osToInsert.add(new OpportunitySplit(OpportunityId =pOpp, SplitTypeId='1494J000000PT4jQAG', SplitOwnerId = Owner2Id, SplitPercentage=0));
+		osToInsert.add(new OpportunitySplit(OpportunityId =pOpp, SplitTypeId='1494J000000PT4oQAG', SplitOwnerId = Owner2Id, SplitPercentage=0));
+		osToInsert.add(new OpportunitySplit(OpportunityId =pOpp, SplitTypeId='1494J000000c8FiQAI', SplitOwnerId = Owner2Id, SplitPercentage=0));
+		Database.insert(osToInsert,false);
+    	OpportunitySplit[] forUpdate = [select Id,SplitPercentage from OpportunitySplit where OpportunityId =:pOpp];
+    	for(OpportunitySplit x :forUpdate) x.SplitPercentage = 50;
+    	update forUpdate;
+	}
+}
+createSplit m = new createSplit();
+m.run(':parameter1',':parameter2',':parameter3');

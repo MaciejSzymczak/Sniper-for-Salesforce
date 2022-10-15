@@ -16,7 +16,7 @@ Approval.lock('0064J000005Qk7gQAC');</br>
 
 </br>
 <h3 align="left">How to install it:</h3>
-Just download the install.exe and run it on you Windows machine.</br>
+Just download the <a href="https://github.com/MaciejSzymczak/Sniper-for-Salesforce/tree/main/source/install.exe" target="blank">install.exe</a> and run it on you Windows machine.</br>
 </br>
 <h3 align="left">Connect with me:</h3>
 <a href="https://www.linkedin.com/in/maciej-szymczak-a818a011/" target="blank">LinkedIn</a>
@@ -25,3 +25,7 @@ Just download the install.exe and run it on you Windows machine.</br>
 <source src="https://github.com/MaciejSzymczak/Sniper-for-Salesforce/blob/main/doc/Sniper.mp4" type="video/mp4">
 Your browser does not support the video tag.
 </video>
+
+
+
+

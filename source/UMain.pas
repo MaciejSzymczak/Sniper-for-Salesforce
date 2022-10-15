@@ -77,6 +77,7 @@ type
     HeadersHelp: TSpeedButton;
     Example9OpportunitySplit1: TMenuItem;
     Example10Infiniteloop1: TMenuItem;
+    Example11AccountFuzzySearch1: TMenuItem;
     procedure LinesLoadFromFileClick(Sender: TObject);
     procedure HeaderLoadFromFileClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -114,6 +115,7 @@ type
     procedure HeadersHelpClick(Sender: TObject);
     procedure Example9OpportunitySplit1Click(Sender: TObject);
     procedure Example10Infiniteloop1Click(Sender: TObject);
+    procedure Example11AccountFuzzySearch1Click(Sender: TObject);
   private
     appDir : string;
     timestampDir : string;
@@ -720,6 +722,12 @@ procedure TFSniper.Example10Infiniteloop1Click(Sender: TObject);
 begin
  header.Lines.LoadFromFile( appDir + 'h10.txt' );
  lines.Lines.LoadFromFile( appDir + 'l10.txt' );
+end;
+
+procedure TFSniper.Example11AccountFuzzySearch1Click(Sender: TObject);
+begin
+ header.Lines.LoadFromFile( appDir + 'h11.txt' );
+ lines.Lines.LoadFromFile( appDir + 'l11.txt' );
 end;
 
 end.

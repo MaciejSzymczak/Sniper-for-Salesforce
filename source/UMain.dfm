@@ -5,7 +5,7 @@ object FSniper: TFSniper
   Height = 685
   Caption = 
     'SNIPER for Salesforce.                Apex Code Mass Execution, ' +
-    'version 2022.09.27'
+    'version 2022.10.15'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -956,6 +956,10 @@ object FSniper: TFSniper
     object Example10Infiniteloop1: TMenuItem
       Caption = 'Example 10: Infinite loop'
       OnClick = Example10Infiniteloop1Click
+    end
+    object Example11AccountFuzzySearch1: TMenuItem
+      Caption = 'Example 11:Account: Fuzzy Search'
+      OnClick = Example11AccountFuzzySearch1Click
     end
   end
   object Gen: TPopupMenu

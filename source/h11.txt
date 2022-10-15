@@ -1,0 +1,18 @@
+//You need to create the object temp__c (String1__c String[255], LongString1__c LongString) where the fuzzy results are to be stored
+//delete [select Id from temp__c ]; 
+class fuzzySearch {
+    void run(String pName){
+		//WHERE clause was addded as an example, adjust it to your needs
+        List<List<SObject>> searchList = [FIND :pName IN NAME FIELDS RETURNING Account (Id, Name where RecordType.DeveloperName='UK_Account' and OwnerId in ('0054J000005lOGA','0054J000006L3C8','0052X000008BMUD'))];
+        Account [] accounts = ((List<Account>)searchList[0]);
+        
+        String res = accounts.size();
+        Account [] accounts2 = [select id, name, owner.Name from Account where Id in :accounts];
+        for (Account account :accounts2) {
+            res = res +'\n'+ account.id +'|'+ account.name +'|'+ account.owner.name;
+        }        
+        insert new temp__c(String1__c=pName, LongString1__c = res);
+    }
+}
+fuzzySearch  m = new fuzzySearch ();
+m.run(':parameter1');

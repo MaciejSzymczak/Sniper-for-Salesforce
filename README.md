@@ -15,10 +15,11 @@ Approval.lock('0064J000005Qk7gQAC');</br>
 </td></tr></table>
 
 </br>
+<h3 align="left">How to install it:</h3>
+Just download the install.exe and run it on you Windows machine.</br>
+</br>
 <h3 align="left">Connect with me:</h3>
-<p align="left">
 <a href="https://www.linkedin.com/in/maciej-szymczak-a818a011/" target="blank">LinkedIn</a>
-</p>
 
 <video width="320" height="240" controls>
 <source src="https://github.com/MaciejSzymczak/Sniper-for-Salesforce/blob/main/doc/Sniper.mp4" type="video/mp4">

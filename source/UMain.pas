@@ -78,6 +78,8 @@ type
     Example9OpportunitySplit1: TMenuItem;
     Example10Infiniteloop1: TMenuItem;
     Example11AccountFuzzySearch1: TMenuItem;
+    Example12RevertoppownersfromOpportunityFieldHistory1: TMenuItem;
+    Example13TansferAccountstonewowner1: TMenuItem;
     procedure LinesLoadFromFileClick(Sender: TObject);
     procedure HeaderLoadFromFileClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -116,6 +118,9 @@ type
     procedure Example9OpportunitySplit1Click(Sender: TObject);
     procedure Example10Infiniteloop1Click(Sender: TObject);
     procedure Example11AccountFuzzySearch1Click(Sender: TObject);
+    procedure Example12RevertoppownersfromOpportunityFieldHistory1Click(
+      Sender: TObject);
+    procedure Example13TansferAccountstonewowner1Click(Sender: TObject);
   private
     appDir : string;
     timestampDir : string;
@@ -728,6 +733,20 @@ procedure TFSniper.Example11AccountFuzzySearch1Click(Sender: TObject);
 begin
  header.Lines.LoadFromFile( appDir + 'h11.txt' );
  lines.Lines.LoadFromFile( appDir + 'l11.txt' );
+end;
+
+procedure TFSniper.Example12RevertoppownersfromOpportunityFieldHistory1Click(
+  Sender: TObject);
+begin
+ header.Lines.LoadFromFile( appDir + 'h12.txt' );
+ lines.Lines.LoadFromFile( appDir + 'l12.txt' );
+end;
+
+procedure TFSniper.Example13TansferAccountstonewowner1Click(
+  Sender: TObject);
+begin
+ header.Lines.LoadFromFile( appDir + 'h13.txt' );
+ lines.Lines.LoadFromFile( appDir + 'l13.txt' );
 end;
 
 end.

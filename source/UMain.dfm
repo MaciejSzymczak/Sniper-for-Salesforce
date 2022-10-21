@@ -144,11 +144,11 @@ object FSniper: TFSniper
           object Label8: TLabel
             Left = 40
             Top = 256
-            Width = 623
+            Width = 663
             Height = 16
             Caption = 
-              'Your password is NOT sent to any cloud. It is only stored in fil' +
-              'e config.bat in the folder you specify in step 3.'
+              'Your password is NOT sent to any cloud but Salesforce. It is sto' +
+              'red in file config.bat in folder you specify in step 3.'
           end
           object Label9: TLabel
             Left = 176
@@ -960,6 +960,14 @@ object FSniper: TFSniper
     object Example11AccountFuzzySearch1: TMenuItem
       Caption = 'Example 11:Account: Fuzzy Search'
       OnClick = Example11AccountFuzzySearch1Click
+    end
+    object Example12RevertoppownersfromOpportunityFieldHistory1: TMenuItem
+      Caption = 'Example 12: Revert opp owners from OpportunityFieldHistory'
+      OnClick = Example12RevertoppownersfromOpportunityFieldHistory1Click
+    end
+    object Example13TansferAccountstonewowner1: TMenuItem
+      Caption = 'Example 13: Transfer Accounts to new owner'
+      OnClick = Example13TansferAccountstonewowner1Click
     end
   end
   object Gen: TPopupMenu

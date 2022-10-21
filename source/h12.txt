@@ -1,0 +1,30 @@
+// Use this script if you want to revert the previous owner for a series of opportunities mistakenly updated with incorrect owner
+// Quick instruction:
+// 1. Upload records into object Sniper_processing__c (Create the object if it does no exist). For example:
+//   "objectId__c"
+//   "0062000000CwjOdAAJ"
+//   "0062000000CwsmnAAB"
+// 2. Run sniper in infinite loop
+String incorrectOwnerName=',Maciej Szymczak,John Travolta,';
+Sniper_processing__c[] temp = [select Id, objectId__c from Sniper_processing__c where Status__c =null order by createdDate limit 1];
+update new Sniper_processing__c (Id=temp[0].Id, Status__c='DONE-NO CHANGE', Message__c='');
+if (temp.size()>0) {
+	Id pOppId = temp[0].objectId__c;
+	Opportunity Opp =[select IsClosed, owner.name, OwnerId from Opportunity where Id=:pOppId];
+	if (Opp.IsClosed && incorrectOwnerName.containsIgnoreCase(Opp.owner.name)) {
+	
+	  OpportunityFieldHistory[] ofh = [select OldValue, NewValue from OpportunityFieldHistory where OpportunityId=:pOppId and DataType='EntityId' and Field='Owner' order by CreatedDate desc limit 1];
+	  if (ofh.size()>0) {
+		if (ofh[0].newValue== Opp.OwnerId)
+		{
+			String previousOwner = String.valueOf(ofh[0].oldValue);
+		    update new Opportunity(Id=pOppId, OwnerId=previousOwner);
+		    update new Sniper_processing__c (Id=temp[0].Id, Status__c='DONE', Message__c=previousOwner);
+		}
+	  }
+	}
+}
+// 3. Monitoring 
+//   select count(Id) from Sniper_processing__c where Status__c =null
+//   select objectId__c, Status__c, Message__c, LastModifiedDate  from Sniper_processing__c where Status__c != null order by LastModifiedDate desc
+

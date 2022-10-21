@@ -1,0 +1,21 @@
+Account[] accountsToProcess = [
+select Id, Owner.Name, OwnerId from Account where OwnerId in (select Id from User where Name in (
+'Julius Cesar'
+,'Tonny Nothing'
+,'Julius Nahrwold'
+))
+limit 5
+];
+For (Account account :accountsToProcess) {
+ account.OwnerId='0052X000008H6G7'; //New user
+}
+if (accountsToProcess.size()>0)
+update accountsToProcess;
+/*
+Monitoring:
+select owner.Name, count(Id) from Account where OwnerId in (select Id from User where Name in (
+'Julius Cesar'
+,'Tonny Nothing'
+,'Julius Nahrwold'
+)) group by owner.Name
+*/

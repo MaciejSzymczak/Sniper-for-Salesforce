@@ -13,7 +13,7 @@ if (accountsToProcess.size()>0)
 update accountsToProcess;
 
 /*
-Use this SOQL to monitor the progress:
+2022.10 Monitoring:
 select owner.Name, count(Id) from Account where OwnerId in (select Id from User where Name in (
 'Julius Cesar'
 ,'Tonny Nothing'

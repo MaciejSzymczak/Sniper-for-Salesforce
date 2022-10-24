@@ -12,7 +12,7 @@ For (Account account :accountsToProcess) {
 if (accountsToProcess.size()>0)
 update accountsToProcess;
 /*
-Monitoring:
+Use this SOQL to monitor the progress:
 select owner.Name, count(Id) from Account where OwnerId in (select Id from User where Name in (
 'Julius Cesar'
 ,'Tonny Nothing'

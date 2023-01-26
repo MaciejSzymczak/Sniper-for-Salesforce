@@ -1,0 +1,17 @@
+Class createPricebookEntry {
+	void run(String sourcePriceBookName, String destPriceBookName, String CurrencyIsoCode, String Product2Id){
+		PricebookEntry[] sourcePE = [select Id, IsActive, CurrencyIsoCode, UnitPrice, Product2Id, Legacy_Id__c, Pricebook2Id from PricebookEntry where Pricebook2.Name = :sourcePriceBookName and CurrencyIsoCode = :CurrencyIsoCode and Product2Id= :Product2Id];
+		PricebookEntry[] descPE = [select Id, IsActive, CurrencyIsoCode, UnitPrice, Product2Id, Legacy_Id__c, Pricebook2Id from PricebookEntry where Pricebook2.Name = :destPriceBookName and CurrencyIsoCode = :CurrencyIsoCode and Product2Id= :Product2Id];
+		if ((sourcePE.size()==1) && (descPE.size()==0)) {
+			insert new PricebookEntry (
+				IsActive = sourcePE[0].IsActive
+				,CurrencyIsoCode = sourcePE[0].CurrencyIsoCode
+				,UnitPrice = sourcePE[0].UnitPrice
+				,Product2Id = sourcePE[0].Product2Id
+				,Pricebook2Id = [select Id from Pricebook2 where Name=:destPriceBookName].Id
+			);
+		}
+	}
+}
+createPricebookEntry m = new createPricebookEntry();
+m.run(':parameter1',':parameter2',':parameter3',':parameter4');

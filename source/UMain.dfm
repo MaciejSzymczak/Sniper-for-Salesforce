@@ -969,6 +969,10 @@ object FSniper: TFSniper
       Caption = 'Example 13: Transfer Accounts to new owner'
       OnClick = Example13TansferAccountstonewowner1Click
     end
+    object Example14Copyproducttoanotherpricebook1: TMenuItem
+      Caption = 'Example 14: Copy product to another pricebook'
+      OnClick = Example14Copyproducttoanotherpricebook1Click
+    end
   end
   object Gen: TPopupMenu
     Left = 328

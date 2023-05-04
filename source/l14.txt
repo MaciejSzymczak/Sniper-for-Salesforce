@@ -1,0 +1,4 @@
+OldPricebook,NewPricebook,Currency,Product
+Swedish Price Book 2022 (SEK),Swedish Price Book 2023 (SEK),EUR,01t4J0000037Z4rQAE
+Swedish Price Book 2022 (SEK),Swedish Price Book 2023 (SEK),GBP,01t4J0000037Z4rQAE
+Swedish Price Book 2022 (SEK),Swedish Price Book 2023 (SEK),INR,01t4J0000037Z4rQAE

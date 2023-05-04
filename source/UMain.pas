@@ -80,6 +80,7 @@ type
     Example11AccountFuzzySearch1: TMenuItem;
     Example12RevertoppownersfromOpportunityFieldHistory1: TMenuItem;
     Example13TansferAccountstonewowner1: TMenuItem;
+    Example14Copyproducttoanotherpricebook1: TMenuItem;
     procedure LinesLoadFromFileClick(Sender: TObject);
     procedure HeaderLoadFromFileClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -121,6 +122,8 @@ type
     procedure Example12RevertoppownersfromOpportunityFieldHistory1Click(
       Sender: TObject);
     procedure Example13TansferAccountstonewowner1Click(Sender: TObject);
+    procedure Example14Copyproducttoanotherpricebook1Click(
+      Sender: TObject);
   private
     appDir : string;
     timestampDir : string;
@@ -747,6 +750,13 @@ procedure TFSniper.Example13TansferAccountstonewowner1Click(
 begin
  header.Lines.LoadFromFile( appDir + 'h13.txt' );
  lines.Lines.LoadFromFile( appDir + 'l13.txt' );
+end;
+
+procedure TFSniper.Example14Copyproducttoanotherpricebook1Click(
+  Sender: TObject);
+begin
+ header.Lines.LoadFromFile( appDir + 'h14.txt' );
+ lines.Lines.LoadFromFile( appDir + 'l14.txt' );
 end;
 
 end.

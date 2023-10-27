@@ -11,6 +11,7 @@ For (Account account :accountsToProcess) {
 }
 if (accountsToProcess.size()>0)
 update accountsToProcess;
+
 /*
 2022.10 Monitoring:
 select owner.Name, count(Id) from Account where OwnerId in (select Id from User where Name in (

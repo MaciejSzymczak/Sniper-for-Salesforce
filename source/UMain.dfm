@@ -5,7 +5,7 @@ object FSniper: TFSniper
   Height = 685
   Caption = 
     'SNIPER for Salesforce.                Apex Code Mass Execution, ' +
-    'version 2022.10.15'
+    'version 2023.10.27'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -279,12 +279,12 @@ object FSniper: TFSniper
         object ButtonsPane12: TPanel
           Left = 280
           Top = 0
-          Width = 649
+          Width = 977
           Height = 201
           BevelOuter = bvNone
           TabOrder = 0
           object SpeedButton5: TSpeedButton
-            Left = 8
+            Left = 24
             Top = 8
             Width = 300
             Height = 185
@@ -312,6 +312,22 @@ object FSniper: TFSniper
             Font.Style = []
             ParentFont = False
             OnClick = SpeedButton4Click
+          end
+          object RunAgain: TSpeedButton
+            Left = 661
+            Top = 8
+            Width = 300
+            Height = 185
+            Caption = 'Run Again'
+            Flat = True
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'MS Sans Serif'
+            Font.Style = []
+            ParentFont = False
+            Visible = False
+            OnClick = RunAgainClick
           end
         end
       end
@@ -917,6 +933,10 @@ object FSniper: TFSniper
   object Popup: TPopupMenu
     Left = 448
     Top = 32
+    object Example0Verybasicexample1: TMenuItem
+      Caption = 'Example 0: Very basic example'
+      OnClick = Example0Verybasicexample1Click
+    end
     object Basicexample1: TMenuItem
       Caption = 'Example 1: Basic example'
       OnClick = Basicexample1Click
@@ -950,7 +970,7 @@ object FSniper: TFSniper
       OnClick = Example8Lockopportunities1Click
     end
     object Example9OpportunitySplit1: TMenuItem
-      Caption = 'Example 9: OpportunitySplit'
+      Caption = 'Example 9: OpportunitySplit (parameters)'
       OnClick = Example9OpportunitySplit1Click
     end
     object Example10Infiniteloop1: TMenuItem

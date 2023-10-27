@@ -81,6 +81,8 @@ type
     Example12RevertoppownersfromOpportunityFieldHistory1: TMenuItem;
     Example13TansferAccountstonewowner1: TMenuItem;
     Example14Copyproducttoanotherpricebook1: TMenuItem;
+    Example0Verybasicexample1: TMenuItem;
+    RunAgain: TSpeedButton;
     procedure LinesLoadFromFileClick(Sender: TObject);
     procedure HeaderLoadFromFileClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -124,6 +126,8 @@ type
     procedure Example13TansferAccountstonewowner1Click(Sender: TObject);
     procedure Example14Copyproducttoanotherpricebook1Click(
       Sender: TObject);
+    procedure Example0Verybasicexample1Click(Sender: TObject);
+    procedure RunAgainClick(Sender: TObject);
   private
     appDir : string;
     timestampDir : string;
@@ -293,7 +297,11 @@ begin
     WriteLn(f,'call config.bat');
     for n := recordFrom to recordTo Do begin
       WriteLn(f,'time /T');
+      WriteLn(f,'echo script'+inttostr(n)+'');
+      //do not expose the password on the screen while the processing is in progress
+      WriteLn(f,'@echo off');
       WriteLn(f,'java -Dfile.encoding=UTF8 -jar executeAnonymous.jar %url% %uname% %pass% %apiv% script'+inttostr(n)+'.txt >> general'+processName+'.log');
+      WriteLn(f,'@echo on');
       if (n mod 100 = 0) then begin
         RunBtn.Caption :=  inttostr(n) +' of ' + inttostr(numberOfLines);
         RunBtn.refresh;
@@ -310,7 +318,11 @@ begin
       WriteLn(f,'call config.bat');
       WriteLn(f,':do_while_loop_start');
       WriteLn(f,'time /T');
+      WriteLn(f,'Once you interrupt the processing manualy remember to delete the workinf folder as it contains the password!');
+      //do not expose the password on the screen while the processing is in progress
+      WriteLn(f,'@echo off');
       WriteLn(f,'java -Dfile.encoding=UTF8 -jar executeAnonymous.jar %url% %uname% %pass% %apiv% script.txt >> general'+processName+'.log');
+      WriteLn(f,'@echo on');
       WriteLn(f,'goto do_while_loop_start');
       closeFile(f);
 
@@ -700,6 +712,7 @@ procedure TFSniper.RunBtnClick(Sender: TObject);
 begin
  if not Generate then exit;
  ExecuteFile( timestampDir + '\Run.bat','','',SW_SHOWMAXIMIZED);
+ RunAgain.Visible := true;
 end;
 
 procedure TFSniper.MenuItem1Click(Sender: TObject);
@@ -757,6 +770,17 @@ procedure TFSniper.Example14Copyproducttoanotherpricebook1Click(
 begin
  header.Lines.LoadFromFile( appDir + 'h14.txt' );
  lines.Lines.LoadFromFile( appDir + 'l14.txt' );
+end;
+
+procedure TFSniper.Example0Verybasicexample1Click(Sender: TObject);
+begin
+ header.Lines.LoadFromFile( appDir + 'h0.txt' );
+ lines.Lines.LoadFromFile( appDir + 'l0.txt' );
+end;
+
+procedure TFSniper.RunAgainClick(Sender: TObject);
+begin
+ RunBtnClick(nil);
 end;
 
 end.

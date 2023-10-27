@@ -1,0 +1,8 @@
+update new Opportunity(Id='0062u3uejejeieis1', ownerId='005ddie83ieeje');
+update new Opportunity(Id='0062u3uejejeieis2', ownerId='005ddie83ieeje');
+update new Opportunity(Id='0062u3uejejeieis3', ownerId='005ddie83ieeje');
+update new Opportunity(Id='0062u3uejejeieis4', ownerId='005ddie83ieeje');
+update new Opportunity(Id='0062u3uejejeieis5', ownerId='005ddie83ieeje');
+update new Opportunity(Id='0062u3uejejeieis6', ownerId='005ddie83ieeje');
+update new Opportunity(Id='0062u3uejejeieis7', ownerId='005ddie83ieeje');
+delete [select Id from Opportunity where Id in ('0062u3uejejeieis7','0062u3uejejeieis7','0062u3uejejeieis10')];

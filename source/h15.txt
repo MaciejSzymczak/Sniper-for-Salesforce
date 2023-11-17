@@ -1,0 +1,3 @@
+User[] users = [select Id, userRoleId from user where name = ':parameter1' and userRole.Name = 'Account Management Reps'];
+for (user u : users) u.userRoleId = [select Id from UserRole where name = ':parameter2'].Id;
+update users;

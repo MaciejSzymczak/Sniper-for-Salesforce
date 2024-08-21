@@ -1,11 +1,11 @@
 object FSniper: TFSniper
   Left = 320
   Top = 129
-  Width = 1253
+  Width = 1311
   Height = 685
   Caption = 
     'SNIPER for Salesforce.                Apex Code Mass Execution, ' +
-    'version 2023.10.27'
+    'version 2024.08.21'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object FSniper: TFSniper
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter2: TSplitter
-    Left = 1242
+    Left = 1300
     Top = 0
     Height = 654
     Align = alRight
@@ -29,9 +29,9 @@ object FSniper: TFSniper
   object Pages: TPageControl
     Left = 0
     Top = 0
-    Width = 1242
+    Width = 1300
     Height = 654
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -46,7 +46,7 @@ object FSniper: TFSniper
       object Panel3: TPanel
         Left = 0
         Top = 423
-        Width = 1234
+        Width = 1292
         Height = 200
         Align = alBottom
         TabOrder = 0
@@ -92,7 +92,7 @@ object FSniper: TFSniper
       object BodyPanel1: TPanel
         Left = 0
         Top = 0
-        Width = 1234
+        Width = 1292
         Height = 423
         Align = alClient
         TabOrder = 1
@@ -272,7 +272,7 @@ object FSniper: TFSniper
       object Panel7: TPanel
         Left = 0
         Top = 423
-        Width = 1234
+        Width = 1292
         Height = 200
         Align = alBottom
         TabOrder = 0
@@ -334,13 +334,13 @@ object FSniper: TFSniper
       object Panel6: TPanel
         Left = 0
         Top = 0
-        Width = 1234
+        Width = 1292
         Height = 423
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
         object Splitter1: TSplitter
-          Left = 724
+          Left = 749
           Top = 0
           Height = 423
           Align = alRight
@@ -348,7 +348,7 @@ object FSniper: TFSniper
         object Panel4: TPanel
           Left = 0
           Top = 0
-          Width = 724
+          Width = 749
           Height = 423
           Align = alClient
           Caption = 'Panel4'
@@ -356,12 +356,12 @@ object FSniper: TFSniper
           object Panel5: TPanel
             Left = 1
             Top = 1
-            Width = 722
+            Width = 747
             Height = 41
             Align = alTop
             TabOrder = 0
             object Label1: TLabel
-              Left = 280
+              Left = 304
               Top = 8
               Width = 296
               Height = 20
@@ -374,7 +374,7 @@ object FSniper: TFSniper
               ParentFont = False
             end
             object HeadersHelp: TSpeedButton
-              Left = 582
+              Left = 606
               Top = 5
               Width = 25
               Height = 25
@@ -518,7 +518,7 @@ object FSniper: TFSniper
                 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
             end
             object BitBtn1: TBitBtn
-              Left = 78
+              Left = 151
               Top = 4
               Width = 139
               Height = 33
@@ -534,11 +534,20 @@ object FSniper: TFSniper
                 0000FFF00000FF000000FFFFFFFFFF000000FFFFFFFFFF000000FFFFFFFFFF00
                 0000}
             end
+            object BitBtn2: TBitBtn
+              Left = 78
+              Top = 4
+              Width = 75
+              Height = 33
+              Caption = 'Clear'
+              TabOrder = 2
+              OnClick = BitBtn2Click
+            end
           end
           object Header: TMemo
             Left = 1
             Top = 42
-            Width = 722
+            Width = 747
             Height = 380
             Align = alClient
             Font.Charset = EASTEUROPE_CHARSET
@@ -554,9 +563,9 @@ object FSniper: TFSniper
           end
         end
         object Panel1: TPanel
-          Left = 727
+          Left = 752
           Top = 0
-          Width = 507
+          Width = 540
           Height = 423
           Align = alRight
           Caption = 'Panel1'
@@ -564,12 +573,12 @@ object FSniper: TFSniper
           object Panel2: TPanel
             Left = 1
             Top = 1
-            Width = 505
+            Width = 538
             Height = 41
             Align = alTop
             TabOrder = 0
             object Label2: TLabel
-              Left = 80
+              Left = 168
               Top = 8
               Width = 315
               Height = 20
@@ -582,7 +591,7 @@ object FSniper: TFSniper
               ParentFont = False
             end
             object LinesHelp: TSpeedButton
-              Left = 401
+              Left = 489
               Top = 7
               Width = 25
               Height = 25
@@ -725,11 +734,20 @@ object FSniper: TFSniper
                 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
                 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
             end
+            object BitBtn3: TBitBtn
+              Left = 78
+              Top = 4
+              Width = 75
+              Height = 33
+              Caption = 'Clear'
+              TabOrder = 1
+              OnClick = BitBtn3Click
+            end
           end
           object Lines: TMemo
             Left = 1
             Top = 42
-            Width = 505
+            Width = 538
             Height = 380
             Align = alClient
             Font.Charset = EASTEUROPE_CHARSET
@@ -763,7 +781,7 @@ object FSniper: TFSniper
       object Panel8: TPanel
         Left = 0
         Top = 423
-        Width = 1234
+        Width = 1292
         Height = 200
         Align = alBottom
         TabOrder = 0
@@ -823,6 +841,7 @@ object FSniper: TFSniper
               0000FFFFFFFFFF000000FFFFFFFFFF000000FFFFF0FFFF000000FFFF000FFF00
               0000FFF00000FF000000FFFFFFFFFF000000FFFFFFFFFF000000FFFFFFFFFF00
               0000}
+            Visible = False
             OnClick = GenerateAndExecuteClick
           end
         end

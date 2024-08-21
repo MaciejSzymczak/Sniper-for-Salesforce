@@ -83,6 +83,8 @@ type
     Example14Copyproducttoanotherpricebook1: TMenuItem;
     Example0Verybasicexample1: TMenuItem;
     RunAgain: TSpeedButton;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
     procedure LinesLoadFromFileClick(Sender: TObject);
     procedure HeaderLoadFromFileClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -128,6 +130,8 @@ type
       Sender: TObject);
     procedure Example0Verybasicexample1Click(Sender: TObject);
     procedure RunAgainClick(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
   private
     appDir : string;
     timestampDir : string;
@@ -711,7 +715,8 @@ end;
 procedure TFSniper.RunBtnClick(Sender: TObject);
 begin
  if not Generate then exit;
- ExecuteFile( timestampDir + '\Run.bat','','',SW_SHOWMAXIMIZED);
+ ShowFolder(workingDir.Text);
+ //ExecuteFile( timestampDir + '\Run.bat','','',SW_SHOWMAXIMIZED);
  RunAgain.Visible := true;
 end;
 
@@ -781,6 +786,16 @@ end;
 procedure TFSniper.RunAgainClick(Sender: TObject);
 begin
  RunBtnClick(nil);
+end;
+
+procedure TFSniper.BitBtn2Click(Sender: TObject);
+begin
+ Header.Lines.Clear;
+end;
+
+procedure TFSniper.BitBtn3Click(Sender: TObject);
+begin
+ Lines.Lines.Clear;
 end;
 
 end.

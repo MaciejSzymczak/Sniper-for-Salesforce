@@ -5,7 +5,7 @@ object FSniper: TFSniper
   Height = 685
   Caption = 
     'SNIPER for Salesforce.                Apex Code Mass Execution, ' +
-    'version 2024.08.21'
+    'version 2024.09.27'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -318,7 +318,7 @@ object FSniper: TFSniper
             Top = 8
             Width = 300
             Height = 185
-            Caption = 'Run Again'
+            Caption = 'Run'
             Flat = True
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
@@ -816,7 +816,7 @@ object FSniper: TFSniper
             Width = 300
             Height = 185
             Anchors = [akTop]
-            Caption = 'Run !'
+            Caption = 'Run'
             Flat = True
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
@@ -953,64 +953,79 @@ object FSniper: TFSniper
     Left = 448
     Top = 32
     object Example0Verybasicexample1: TMenuItem
-      Caption = 'Example 0: Very basic example'
+      Caption = '0: Very basic example'
       OnClick = Example0Verybasicexample1Click
     end
     object Basicexample1: TMenuItem
-      Caption = 'Example 1: Basic example'
+      Caption = '1: Basic example'
       OnClick = Basicexample1Click
     end
     object WritingErrorToGenerallog1: TMenuItem
-      Caption = 'Example 2: Writing error to General.log'
+      Caption = '2: Writing error to General.log'
       OnClick = WritingErrorToGenerallog1Click
     end
+    object Example10Infiniteloop1: TMenuItem
+      Caption = '10: Infinite loop'
+      OnClick = Example10Infiniteloop1Click
+    end
+    object Receipes1: TMenuItem
+      Caption = '=== Receipes ==='
+    end
     object Mergeaccount1: TMenuItem
-      Caption = 'Example 3: Merge accounts'
+      Caption = '3: Merge accounts'
       OnClick = Mergeaccount1Click
     end
     object Example7Mergecontactsbasic1: TMenuItem
-      Caption = 'Example 4: Merge contacts (basic)'
+      Caption = '4: Merge contacts (basic)'
       OnClick = Example7Mergecontactsbasic1Click
     end
     object Mergecontacts1: TMenuItem
-      Caption = 'Example 5: Merge contacts (advanced)'
+      Caption = '5: Merge contacts (advanced)'
       OnClick = Mergecontacts1Click
     end
     object Example5ConvertLead1: TMenuItem
-      Caption = 'Example 6: Convert Leads'
+      Caption = '6: Convert Leads'
       OnClick = Example5ConvertLead1Click
     end
     object Example6ConvertAttachmentsintoFiles1: TMenuItem
-      Caption = 'Example 7: Convert Attachments into Files'
+      Caption = '7: Convert Attachments into Files'
       OnClick = Example6ConvertAttachmentsintoFiles1Click
     end
     object Example8Lockopportunities1: TMenuItem
-      Caption = 'Example 8: Lock opportunities'
+      Caption = '8: Lock opportunities'
       OnClick = Example8Lockopportunities1Click
     end
     object Example9OpportunitySplit1: TMenuItem
-      Caption = 'Example 9: OpportunitySplit (parameters)'
+      Caption = '9: OpportunitySplit (parameters)'
       OnClick = Example9OpportunitySplit1Click
     end
-    object Example10Infiniteloop1: TMenuItem
-      Caption = 'Example 10: Infinite loop'
-      OnClick = Example10Infiniteloop1Click
-    end
     object Example11AccountFuzzySearch1: TMenuItem
-      Caption = 'Example 11:Account: Fuzzy Search'
+      Caption = '11:Account: Fuzzy Search'
       OnClick = Example11AccountFuzzySearch1Click
     end
     object Example12RevertoppownersfromOpportunityFieldHistory1: TMenuItem
-      Caption = 'Example 12: Revert opp owners from OpportunityFieldHistory'
+      Caption = '12: Revert opp owners from OpportunityFieldHistory'
       OnClick = Example12RevertoppownersfromOpportunityFieldHistory1Click
     end
     object Example13TansferAccountstonewowner1: TMenuItem
-      Caption = 'Example 13: Transfer Accounts to new owner'
+      Caption = '13: Transfer Accounts to new owner'
       OnClick = Example13TansferAccountstonewowner1Click
     end
     object Example14Copyproducttoanotherpricebook1: TMenuItem
-      Caption = 'Example 14: Copy product to another pricebook'
+      Caption = '14: Copy products between pricebooks'
       OnClick = Example14Copyproducttoanotherpricebook1Click
+    end
+    object Example151: TMenuItem
+      Caption = '15:Adding Products to Pricebooks'
+      OnClick = Example151Click
+    end
+    object Example161: TMenuItem
+      Caption = '16: User: Change Role'
+      OnClick = Example161Click
+    end
+    object N17CloneProductandaddtopricebook1: TMenuItem
+      Caption = '17: Clone Product and add to pricebook'
+      OnClick = N17CloneProductandaddtopricebook1Click
     end
   end
   object Gen: TPopupMenu

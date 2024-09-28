@@ -85,6 +85,10 @@ type
     RunAgain: TSpeedButton;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
+    Example151: TMenuItem;
+    Example161: TMenuItem;
+    N17CloneProductandaddtopricebook1: TMenuItem;
+    Receipes1: TMenuItem;
     procedure LinesLoadFromFileClick(Sender: TObject);
     procedure HeaderLoadFromFileClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -132,6 +136,9 @@ type
     procedure RunAgainClick(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure Example151Click(Sender: TObject);
+    procedure Example161Click(Sender: TObject);
+    procedure N17CloneProductandaddtopricebook1Click(Sender: TObject);
   private
     appDir : string;
     timestampDir : string;
@@ -791,11 +798,31 @@ end;
 procedure TFSniper.BitBtn2Click(Sender: TObject);
 begin
  Header.Lines.Clear;
+ self.ActiveControl := header;
 end;
 
 procedure TFSniper.BitBtn3Click(Sender: TObject);
 begin
  Lines.Lines.Clear;
+ self.ActiveControl := Lines;
+end;
+
+procedure TFSniper.Example151Click(Sender: TObject);
+begin
+ header.Lines.LoadFromFile( appDir + 'h15.txt' );
+ lines.Lines.LoadFromFile( appDir + 'l15.txt' );
+end;
+
+procedure TFSniper.Example161Click(Sender: TObject);
+begin
+ header.Lines.LoadFromFile( appDir + 'h16.txt' );
+ lines.Lines.LoadFromFile( appDir + 'l16.txt' );
+end;
+
+procedure TFSniper.N17CloneProductandaddtopricebook1Click(Sender: TObject);
+begin
+ header.Lines.LoadFromFile( appDir + 'h17.txt' );
+ lines.Lines.LoadFromFile( appDir + 'l17.txt' );
 end;
 
 end.

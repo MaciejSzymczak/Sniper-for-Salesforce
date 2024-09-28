@@ -1,3 +1,55 @@
-User[] users = [select Id, userRoleId from user where name = ':parameter1' and userRole.Name = 'Account Management Reps'];
-for (user u : users) u.userRoleId = [select Id from UserRole where name = ':parameter2'].Id;
-update users;
+//select subject, createdDate from task where template__c = 'SFL8N-5300' order by createdDate desc 
+//delete [select Id from task where template__c = 'SFL8N-5300'];
+String PCode=':parameter1';
+Decimal newAmount=:parameter2;
+Id PriceBookId = [select Id from PriceBook2 where name = ':parameter3'].Id;
+String PCurrency = ':parameter4';
+String taskStamp='SFL8N-5300';
+Id standardPriceBookId = [select Id from PriceBook2 where isStandard = true].Id;
+try {
+	Product2[] p = [select Id from Product2 where ProductCode=:PCode];
+	if (p.size()==1) {
+	  //standard
+	  PriceBookEntry[] pbes = [select Id from PriceBookEntry where CurrencyIsoCode=:PCurrency and Pricebook2Id=:standardPriceBookId and Product2Id=:p[0].Id ];
+	  if (pbes.size()==0) {
+		Insert new PriceBookEntry(
+			IsActive=true,
+			UnitPrice=newAmount,
+			CurrencyIsoCode=PCurrency,
+			Pricebook2Id=standardPriceBookId,
+			Product2Id= p[0].Id
+		);	  
+		insert new task(subject=PCode+'OK:INSERT_S', template__c=taskStamp);
+	  } else {
+		pbes[0].IsActive=true;
+		pbes[0].UnitPrice=newAmount;
+		update pbes[0]; 
+		insert new task(subject=PCode+'OK:UPDATE_S', template__c=taskStamp);
+	  }
+	  //pricebook
+	  PriceBookEntry[] pbe = [select Id from PriceBookEntry where CurrencyIsoCode=:PCurrency and Pricebook2Id=:PriceBookId and Product2Id=:p[0].Id ];
+	  if (pbe.size()==0) {
+		Insert new PriceBookEntry(
+			IsActive=true,
+			UseStandardPrice=true,
+			UnitPrice=newAmount,
+			CurrencyIsoCode=PCurrency,
+			Pricebook2Id=PriceBookId,
+			Product2Id= p[0].Id
+		);	  
+		insert new task(subject=PCode+'OK:INSERT_P', template__c=taskStamp);
+	  } else {
+		pbe[0].IsActive=true;
+		pbe[0].UseStandardPrice=true;
+		pbe[0].UnitPrice=newAmount;
+		update pbe[0]; 
+		insert new task(subject=PCode+'OK:UPDATE_P', template__c=taskStamp);
+	  }
+	}
+	else
+	{
+	 insert new task(subject=PCode+':WARNING:ZERO OR MANY PRODUCTS:'+p.size(), template__c=taskStamp);
+	}
+} catch (Exception e) {
+	 insert new task (subject=PCode+'ERROR'+e.getMessage()+''+' Cause:'+e.getCause()+' Line:'+e.getLineNumber(), template__c=taskStamp);
+}

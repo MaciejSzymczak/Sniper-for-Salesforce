@@ -1,5 +1,5 @@
-Maciej Swan,Head of Agency
-Julian Alves,European CEO
-Clerk Thomas,Mediterranean Sales Director
-Runner Noel,SDR Executive
-Blue Scotcher,UK Customer Services
+ProductCode,Amount,PricebookName,Currency
+SE-C1-DAT-STANDARD,2625,Swedish Price Book 2024 (SEK),SEK
+SE-C1-DAT-LAUNCH,0,Swedish Price Book 2024 (SEK),SEK
+SE-C1-DAT-CAMPAIGN,0,Swedish Price Book 2024 (SEK),SEK
+SE-C1-MON-UKPRINT-50CLIPS,1483.33333333333,Swedish Price Book 2024 (SEK),SEK

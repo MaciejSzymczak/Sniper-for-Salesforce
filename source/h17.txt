@@ -1,0 +1,67 @@
+class Utils{ 
+    // Returns a dynamic SOQL statement for the whole object, includes only creatable fields since we will be inserting a cloned result of this query
+    public string getCreatableFieldsSOQL(String objectName, String whereClause){
+        String selects = '';
+        if (whereClause == null || whereClause == ''){ return null; }
+        // Get a map of field name and field token
+        Map<String, Schema.SObjectField> fMap = Schema.getGlobalDescribe().get(objectName.toLowerCase()).getDescribe().Fields.getMap();
+        list<string> selectFields = new list<string>();
+        if (fMap != null){
+            for (Schema.SObjectField ft : fMap.values()){ // loop through all field tokens (ft)
+                Schema.DescribeFieldResult fd = ft.getDescribe(); // describe each field (fd)
+                if (fd.isCreateable()){ // field is creatable
+                    selectFields.add(fd.getName());
+                }
+            }
+        }
+        if (!selectFields.isEmpty()){
+            for (string s:selectFields){
+                selects += s + ',';
+            }
+            if (selects.endsWith(',')){selects = selects.substring(0,selects.lastIndexOf(','));}
+        }
+        return 'SELECT ' + selects + ' FROM ' + objectName + ' WHERE ' + whereClause;
+    }
+}
+String soql = new Utils().getCreatableFieldsSOQL('Product2','Id=\':parameter2\'');
+Product2 l = (Product2)Database.query(soql);
+l.ProductCode=':parameter3';
+l.Legacy_Id__c=':parameter1'+l.Id;
+l.SBQQ__Component__c=false;
+l.IsActive=false;
+Product2 l2 = l.clone(false, true);
+insert l2;
+
+Insert new PriceBookEntry(
+IsActive=true,
+CurrencyIsoCode=':parameter5',
+UnitPrice=:parameter4,
+Pricebook2Id=[select Id from PriceBook2 where isStandard = true].Id,
+Product2Id= l2.Id,
+Legacy_Id__c=':parameter1'+l.Id+'_STND'
+);
+
+//01s4J000004598AQAQ	German Price Book 2020
+//01s4J000000kw2eQAA Swedish Price Book 2024 (SEK)
+
+if (':parameter5'=='EUR') {
+  Insert new PriceBookEntry(
+  IsActive=true,
+  CurrencyIsoCode=':parameter5',
+  UnitPrice=:parameter4,
+  Pricebook2Id='01s4J000004598AQAQ',
+  Product2Id= l2.Id,
+  Legacy_Id__c=':parameter1'+l.Id+'_'+':parameter5'
+  );
+}
+
+if (':parameter5'=='SEK') {
+  Insert new PriceBookEntry(
+  IsActive=true,
+  CurrencyIsoCode=':parameter5',
+  UnitPrice=:parameter4,
+  Pricebook2Id='01s4J000000kw2eQAA',
+  Product2Id= l2.Id,
+  Legacy_Id__c=':parameter1'+l.Id+'_'+':parameter5'
+  );
+}

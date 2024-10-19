@@ -408,7 +408,7 @@ begin
   reWrite(f);
   WriteLn(f,'set url='+url.text);
   WriteLn(f,'set uname='+User.text);
-  WriteLn(f,'set pass='+Password.Text + SecurityToken.text);
+  WriteLn(f,'set pass="'+Password.Text + SecurityToken.text+'"');
   WriteLn(f,'set apiv=53.0');
   closeFile(f);
 

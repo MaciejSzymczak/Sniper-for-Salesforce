@@ -5,7 +5,7 @@ object FSniper: TFSniper
   Height = 685
   Caption = 
     'SNIPER for Salesforce.                Apex Code Mass Execution, ' +
-    'version 2024.09.27'
+    'version 2024.10.18'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

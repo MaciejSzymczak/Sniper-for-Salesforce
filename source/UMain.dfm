@@ -996,7 +996,7 @@ object FSniper: TFSniper
       OnClick = Example8Lockopportunities1Click
     end
     object Example9OpportunitySplit1: TMenuItem
-      Caption = '9: OpportunitySplit (parameters)'
+      Caption = '9: OpportunitySplit'
       OnClick = Example9OpportunitySplit1Click
     end
     object Example11AccountFuzzySearch1: TMenuItem
@@ -1011,21 +1011,21 @@ object FSniper: TFSniper
       Caption = '13: Transfer Accounts to new owner'
       OnClick = Example13TansferAccountstonewowner1Click
     end
-    object Example14Copyproducttoanotherpricebook1: TMenuItem
-      Caption = '14: Copy products between pricebooks'
-      OnClick = Example14Copyproducttoanotherpricebook1Click
+    object Example161: TMenuItem
+      Caption = '16: User: Change Role'
+      OnClick = Example161Click
     end
     object Example151: TMenuItem
       Caption = '15:Adding Products to Pricebooks'
       OnClick = Example151Click
     end
-    object Example161: TMenuItem
-      Caption = '16: User: Change Role'
-      OnClick = Example161Click
-    end
     object N17CloneProductandaddtopricebook1: TMenuItem
       Caption = '17: Clone Product and add to pricebook'
       OnClick = N17CloneProductandaddtopricebook1Click
+    end
+    object Example14Copyproducttoanotherpricebook1: TMenuItem
+      Caption = '14: Copy products between pricebooks'
+      OnClick = Example14Copyproducttoanotherpricebook1Click
     end
   end
   object Gen: TPopupMenu
